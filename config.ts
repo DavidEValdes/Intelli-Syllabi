@@ -1,3 +1,2 @@
-export const indexName = 'intelli-syllabi-index'
-export const timeout = 90000
-
+export const index = 'testindex'
+export const timeout = 180000
