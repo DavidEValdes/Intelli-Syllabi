@@ -68,6 +68,7 @@ async function sendQuery()
       {
         result && <p>{result}</p>
       }
+      <button onClick ={createIndexAndEmbeddings}>send to pinecone</button>
     </main>
   )
 
