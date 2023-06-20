@@ -73,7 +73,7 @@ export const updatePinecone = async (client, indexName, docs) =>
             };
             batch = [...batch,vector]
 
-            if(batch.length === batchSize || i = chunks.length-1)
+            if(batch.length === batchSize || i === chunks.length-1)
             {
                 await index.upsert(
                 {
@@ -85,5 +85,46 @@ export const updatePinecone = async (client, indexName, docs) =>
                 batch = [];
             }
         }
+    }
+}
+
+export const queryVectorStoreAndLLM = async (client, indexName, question) =>
+{
+    console.log ('qurying vectorstore...');
+
+    const index = client.Index(indexName);
+    const queryEmbedding = await new OpenAIEmbeddings().embedQuery(question);
+
+    let queryResponse = await index.query
+    ({
+        queryRequest:
+        {
+            topK: 10,
+            vector: queryEmbedding,
+            includeMetadata: true,
+            includeValues: true,
+        },
+    });
+
+    console.log('found ${queryResponse.matches.length} matches...');
+    console.log('question: ${question}...');
+
+    if(queryResponse.matches.length)
+    {
+        const llm = new OpenAI({});
+        const chain = loadQAStuffChain(llm);
+
+        const concatenatedPageContent = queryResponse.matches.map((match) => match.metadata.pageContent).join(" ");
+        const result = await chain.call
+        ({
+            input_documents: [new Document({pageContent: concatenatedPageContent})],
+            question: question,
+        });
+        console.log('response: ${result.text}');
+        return result.text;
+    }
+    else
+    {
+        console.log('no matches found');
     }
 }
