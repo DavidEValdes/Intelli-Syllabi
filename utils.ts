@@ -61,7 +61,7 @@ export const updatePinecone = async (client, indexName, docs) =>
             const chunk = chunks[i];
             const vector = 
             {
-                id = '${textPath}_${i}',
+                id: '${textPath}_${i}',
                 values: embeddingsArray[i],
                 metadata:
                 {
