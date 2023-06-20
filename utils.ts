@@ -47,7 +47,7 @@ export const updatePinecone = async (client, indexName, docs) =>
 
         const chunks = await textSplitter.createDocuments([text]);
 
-        console.log('text split into ${chunks.length}' chunks);
+        console.log('text split into ${chunks.length}');
         console.log('calli');
 
         const embeddingsArray = await new OpenAIEmbeddings().embedDocuments(
