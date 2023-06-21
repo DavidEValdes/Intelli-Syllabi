@@ -1,2 +1,2 @@
-export const index = 'testindex'
-export const timeout = 180000
+export const index = 'bob'
+export const timeout = 80000

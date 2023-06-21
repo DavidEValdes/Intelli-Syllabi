@@ -7,12 +7,12 @@ import { timeout } from './config'
 
 export const createIndex = async (client,indexName, vectorDimension) =>
 {
-    console.log('testing "${indexName}"...');
+    console.log('testing ${indexName}');
     const Indexes = await client.listIndexes();
 
     if(!Indexes.includes(indexName))
     {
-        console.log('creating "${indexName}"...');
+        console.log('creating "${indexName}');
 
         await client.createIndex(
         {
@@ -23,7 +23,9 @@ export const createIndex = async (client,indexName, vectorDimension) =>
                 metric: 'cosine',
             },
         });
+        console.log('please wait');
         await new Promise((resolve) => setTimeout(resolve,timeout));
+        console.log("created ${indexName}");
     }
     else
     {
@@ -39,7 +41,7 @@ export const updatePinecone = async (client, indexName, docs) =>
     for(const doc of docs)
     {
         console.log('processing: ${doc.metadata.source}');
-        const textPath = doc.metadata.source;
+        const txtPath = doc.metadata.source;
         const text = doc.pageContent;
         const textSplitter = new RecursiveCharacterTextSplitter( {chunkSize:1000,});
 
@@ -48,27 +50,29 @@ export const updatePinecone = async (client, indexName, docs) =>
         const chunks = await textSplitter.createDocuments([text]);
 
         console.log('text split into ${chunks.length}');
-        console.log('calli');
+        console.log('doing something');
 
         const embeddingsArray = await new OpenAIEmbeddings().embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
         );
+        console.log('embeddings done somehow')
 
-        const batchSize = 1000;
+        const batchSize = 100;
         let batch:any = [];
         for (let i = 0; i < chunks.length; i++)
         {
+            console.log("loopy")
             const chunk = chunks[i];
             const vector = 
             {
-                id: '${textPath}_${i}',
+                id: '${txtPath}_${i}',
                 values: embeddingsArray[i],
                 metadata:
                 {
                     ...chunk.metadata,
                     loc: JSON.stringify(chunk.metadata.loc),
                     pageContent: chunk.pageContent,
-                    txtPath: textPath,
+                    txtPath: txtPath,
                 },
             };
             batch = [...batch,vector]
@@ -80,9 +84,11 @@ export const updatePinecone = async (client, indexName, docs) =>
                     upsertRequest:
                     {
                         vectors: batch,
-                    },
+                    }
                 });
                 batch = [];
+                console.log("batch created");
+                
             }
         }
     }
