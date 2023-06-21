@@ -65,7 +65,7 @@ export const updatePinecone = async (client, indexName, docs) =>
             const chunk = chunks[i];
             const vector = 
             {
-                id: '${txtPath}_${i}',
+                id: txtPath+i,
                 values: embeddingsArray[i],
                 metadata:
                 {
@@ -84,7 +84,7 @@ export const updatePinecone = async (client, indexName, docs) =>
                     upsertRequest:
                     {
                         vectors: batch,
-                    }
+                    },
                 });
                 batch = [];
                 console.log("batch created");
@@ -112,15 +112,20 @@ export const queryVectorStoreAndLLM = async (client, indexName, question) =>
         },
     });
 
-    console.log('found ${queryResponse.matches.length} matches...');
-    console.log('question: ${question}...');
+    console.log('found '+queryResponse.matches.length+' matches...');
+    console.log('question: '+question+'...');
 
     if(queryResponse.matches.length)
     {
+        console.log('we in loop');
         const llm = new OpenAI({});
         const chain = loadQAStuffChain(llm);
+        console.log('llm?');
 
-        const concatenatedPageContent = queryResponse.matches.map((match) => match.metadata.pageContent).join(" ");
+        const concatenatedPageContent = queryResponse.matches
+        .map((match) => match.metadata.pageContent)
+        .join(" ");
+        console.log('work?');
         const result = await chain.call
         ({
             input_documents: [new Document({pageContent: concatenatedPageContent})],
