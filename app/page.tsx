@@ -70,14 +70,14 @@ async function sendQuery()
 
 return (
   <main className="flex flex-col items-center justify-between p-24 space-y-6">
-     <input
+     <h1 className="text-4xl font-bold">Intelli Syllabi</h1>
+     <input 
       className = 'text-black px-2 py-1'
       onChange={e => setQuery(e.target.value)}
       />
       <button className = "px-7 py-1 rounded-2x1 bg-white text-black mt-2 mb-2" onClick= {sendQuery}>
         Ask the compiling cowboys
       </button>
-    <h1 className="text-4xl font-bold">Intelli Syllabi</h1>
     <div>
       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file-upload">
         Upload a document
