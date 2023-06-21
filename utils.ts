@@ -7,12 +7,12 @@ import { timeout } from './config'
 
 export const createIndex = async (client,indexName, vectorDimension) =>
 {
-    console.log('testing ${indexName}');
+    console.log(`testing ${indexName}`);
     const Indexes = await client.listIndexes();
 
     if(!Indexes.includes(indexName))
     {
-        console.log('creating "${indexName}');
+        console.log(`creating "${indexName}`);
 
         await client.createIndex(
         {
@@ -25,22 +25,22 @@ export const createIndex = async (client,indexName, vectorDimension) =>
         });
         console.log('please wait');
         await new Promise((resolve) => setTimeout(resolve,timeout));
-        console.log("created ${indexName}");
+        console.log(`created ${indexName}`);
     }
     else
     {
-        console.log('"${indexName}" already exists');
+        console.log(`"${indexName}" already exists`);
     }
 }
 
 export const updatePinecone = async (client, indexName, docs) =>
 {
     const index = client.Index(indexName);
-    console.log('found pinecone index: ${indexName}');
+    console.log(`found pinecone index: ${indexName}`);
 
     for(const doc of docs)
     {
-        console.log('processing: ${doc.metadata.source}');
+        console.log(`processing: ${doc.metadata.source}`);
         const txtPath = doc.metadata.source;
         const text = doc.pageContent;
         const textSplitter = new RecursiveCharacterTextSplitter( {chunkSize:1000,});
@@ -49,7 +49,7 @@ export const updatePinecone = async (client, indexName, docs) =>
 
         const chunks = await textSplitter.createDocuments([text]);
 
-        console.log('text split into ${chunks.length}');
+        console.log(`text split into ${chunks.length}`);
         console.log('doing something');
 
         const embeddingsArray = await new OpenAIEmbeddings().embedDocuments(
@@ -61,11 +61,12 @@ export const updatePinecone = async (client, indexName, docs) =>
         let batch:any = [];
         for (let i = 0; i < chunks.length; i++)
         {
-            console.log("loopy")
+
+            console.log('loopy');
             const chunk = chunks[i];
             const vector = 
             {
-                id: txtPath+i,
+                id: `${txtPath}_${i}`,
                 values: embeddingsArray[i],
                 metadata:
                 {
@@ -131,7 +132,7 @@ export const queryVectorStoreAndLLM = async (client, indexName, question) =>
             input_documents: [new Document({pageContent: concatenatedPageContent})],
             question: question,
         });
-        console.log('response: ${result.text}');
+        console.log(`response: ${result.text}`);
         return result.text;
     }
     else
