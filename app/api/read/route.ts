@@ -10,7 +10,7 @@ export async function POST(req: NextRequest){
     const client = new PineconeClient()
     await client.init({
         apiKey: process.env.PINECONE_API_KEY || '',
-        environment: process.env.PINECONE_ENVIORNMENT || ''
+        environment: process.env.PINECONE_ENVIRONMENT || ''
     })
     const text = await queryVectorStoreAndLLM(client, index, body)
     return NextResponse.json({
