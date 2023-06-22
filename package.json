@@ -11,11 +11,13 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.357.0",
     "@aws-sdk/client-textract": "^3.357.0",
+    "@aws-sdk/signature-v4-crt": "^3.357.0",
     "@heroicons/react": "^2.0.18",
     "@pinecone-database/pinecone": "^0.1.6",
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
+    "aws-crt": "^1.15.18",
     "aws-sdk": "^2.1402.0",
     "langchain": "^0.0.96",
     "next": "13.4.6",
