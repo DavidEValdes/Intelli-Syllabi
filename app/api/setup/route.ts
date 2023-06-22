@@ -25,6 +25,9 @@ const textract = new AWS.Textract({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
 
+  // Our s3 bucket name
+  const bucketName = 'syllabus-bucket'
+
 
 async function uploadToS3(bucketName, filePath) {
   const fileContent = fs.readFileSync(filePath);
