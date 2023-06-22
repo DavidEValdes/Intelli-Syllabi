@@ -8,83 +8,89 @@ import{
     updatePinecone
 } from '../../../utils'
 import { index } from '../../../config'
+import { S3Client } from '@aws-sdk/client-s3';
+import { TextractClient, StartDocumentAnalysisCommand, GetDocumentAnalysisCommand} from '@aws-sdk/client-textract';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import fs from 'fs';
 
-const AWS = require('aws-sdk');
-const fs = require('fs');
 
 
-const s3 = new AWS.S3({
-  region: 'us-west-2', 
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-const textract = new AWS.Textract({
-    region: 'us-west-2', 
+const s3 = new S3Client({
+  region: 'us-west-2',
+  credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  });
+  }
+});
+
+const textract = new TextractClient({
+  region: 'us-west-2',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
+});
 
   // Our s3 bucket name
   const bucketName = 'syllabus-bucket'
 
 
-async function uploadToS3(bucketName, filePath) {
-  const fileContent = fs.readFileSync(filePath);
-  const keyName = filePath.split('/').pop(); 
+  async function uploadToS3(bucketName, filePath) {
+    const fileContent = fs.readFileSync(filePath);
+    const keyName = filePath.split('/').pop();
+  
+    const params = {
+      Bucket: bucketName,
+      Key: keyName,
+      Body: fileContent,
+    };
+  
+    try {
+      const data = await s3.send(new PutObjectCommand(params));
+      console.log(`File uploaded successfully`);
+      return data;
+    } catch (err) {
+      console.error('Error in uploadToS3', err);
+      throw err;
+    }
+  }
 
+async function startTextractJob(bucketName, keyName) {
   const params = {
-    Bucket: bucketName,
-    Key: keyName,
-    Body: fileContent,
+    DocumentLocation: {
+      S3Object: {
+        Bucket: bucketName,
+        Name: keyName,
+      },
+    },
+    FeatureTypes: ['FORMS']
   };
 
   try {
-    const data = await s3.upload(params).promise();
-    console.log(`File uploaded successfully at ${data.Location}`);
-    return data;
+    const data = await textract.send(new StartDocumentAnalysisCommand(params));
+    return data.JobId;
   } catch (err) {
-    console.error('Error in uploadToS3', err);
+    console.error('Error in startTextractJob', err);
     throw err;
   }
 }
 
 
-async function startTextractJob(bucketName, keyName) {
-    const params = {
-      DocumentLocation: {
-        S3Object: {
-          Bucket: bucketName,
-          Name: keyName,
-        },
-      },
-      FeatureTypes: ['FORMS']
-    };
-  
+async function getTextractJobResults(jobId) {
+
+  const params = {
+    JobId: jobId
+  };
+
+  let processing = false;
+  do {
+    let data;
     try {
-      const data = await textract.startDocumentAnalysis(params).promise();
-      return data.JobId;
+      data = await textract.send(new GetDocumentAnalysisCommand(params));
     } catch (err) {
-      console.error('Error in startTextractJob', err);
+      console.error('Error in getTextractJobResults', err);
       throw err;
     }
-}
-
-
-async function getTextractJobResults(jobId) {
-    const params = {
-      JobId: jobId
-    };
-  
-    let processing = false;
-    do {
-      let data;
-      try {
-        data = await textract.getDocumentAnalysis(params).promise();
-      } catch (err) {
-        console.error('Error in getTextractJobResults', err);
-        throw err;
-      }
   
       if (data.JobStatus === 'SUCCEEDED') {
         // Get raw text from the blocks
