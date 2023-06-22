@@ -143,11 +143,14 @@ export async function POST() {
     const vectorDimensions = 1536
   
     const client = new PineconeClient()
+    client.projectName = '9e1ca4d'
+    
     await client.init({
       apiKey: process.env.PINECONE_API_KEY || '',
-      environment: process.env.PINECONE_ENVIRONMENT || ''
+      environment: process.env.PINECONE_ENVIRONMENT || '',
     })
-  
+
+   
     try {
       await createIndex(client, index, vectorDimensions)
   
