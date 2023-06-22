@@ -8,6 +8,11 @@ import{
     updatePinecone
 } from '../../../utils'
 import { index } from '../../../config'
+import { Textract } from 'aws-sdk';
+import { promises as fs } from 'fs';
+import * as openai from 'openai';
+
+
 
 export async function POST(){
 
