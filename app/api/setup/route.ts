@@ -34,7 +34,6 @@ const textract = new TextractClient({
   // Our s3 bucket name
   const bucketName = 'syllabus-bucket'
 
-
   async function uploadToS3(bucketName, filePath) {
     const fileContent = fs.readFileSync(filePath);
     const keyName = filePath.split('/').pop();
@@ -46,9 +45,9 @@ const textract = new TextractClient({
     };
   
     try {
-      const data = await s3.send(new PutObjectCommand(params));
+      await s3.send(new PutObjectCommand(params));
       console.log(`File uploaded successfully`);
-      return data;
+      return keyName; // return the keyName here
     } catch (err) {
       console.error('Error in uploadToS3', err);
       throw err;
