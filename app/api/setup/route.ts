@@ -48,8 +48,12 @@ interface Document<T> {
         Document: { Bytes: fileBytes }
       }).promise();
   
-      const text = response.Blocks?.filter(block => block.BlockType === 'LINE').map(line => line.Text).join('\n') || '';
-      const id = this.getPath();  
+      const blocks = response.Blocks || [];
+      const text = blocks
+        .filter(block => block.BlockType === 'LINE')
+        .map(line => line.Text)
+        .join('\n');
+      const id = this.getPath();   
   
       return [{
         text,
@@ -69,39 +73,57 @@ interface Document<T> {
 
 
 
-  export async function POST() {
+export async function POST() {
+  const loader = new DirectoryLoader('./documents', {
+    '.txt': (path) => new TextLoader(path),
+    '.md': (path) => new TextLoader(path),
+    '.pdf': (path) => new TextractLoader(path)
+  });
 
-    
-    const textract = new Textract({
-      region: 'us-east-1',
-      accessKeyId:'AKIAQ2ZZFTKRBXO5ZYGE',
-      secretAccessKey: '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'
-    });
-  
-    
-    const loader = new DirectoryLoader('./documents', {
-      '.txt': (path) => new TextLoader(path),
-      '.md': (path) => new TextLoader(path),
-      '.pdf': (path) => new TextractLoader(path)
-    });
-  
-    const docs = await loader.load();
-    const vectorDimensions = 1536;
-  
-    const client = new PineconeClient();
-    await client.init({
-      apiKey: process.env.PINECONE_API_KEY || '',
-      environment: process.env.PINECONE_ENVIRONMENT || ''
-    });
-  
-    try {
-      await createIndex(client, index, vectorDimensions);
-      await updatePinecone(client, index, docs);
-    } catch (err) {
-      console.log('error: ', err);
+  const docs = await loader.loadAndSplit();
+  const vectorDimensions = 1536;
+
+  const client = new PineconeClient();
+  await client.init({
+    apiKey: process.env.PINECONE_API_KEY || '',
+    environment: process.env.PINECONE_ENVIRONMENT || ''
+  });
+
+  try {
+    await createIndex(client, index, vectorDimensions);
+
+    // Iterate over each document and perform DetectDocumentText operation
+    for (const doc of docs as Document<Record<string, any>>[]) {
+      const textract = new Textract({
+        region: 'us-east-2',
+        accessKeyId: 'AKIAQ2ZZFTKRBXO5ZYGE',
+        secretAccessKey: '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'
+      });
+
+      const fileBytes = await fs.readFile(doc.id);
+      const response = await textract.detectDocumentText({
+        Document: { Bytes: fileBytes }
+      }).promise();
+
+      // Process the response and extract the text
+      const blocks = response.Blocks || [];
+      const text = blocks
+        .filter(block => block.BlockType === 'LINE')
+        .map(line => line.Text)
+        .join('\n');
+
+      // Update the document's text and pageContent
+      (doc as Document<any>).text = text;
+      (doc as Document<any>).pageContent = text;
+
+      // Update Pinecone index with the updated document
+      await updatePinecone(client, index, [doc]);
     }
-  
-    return NextResponse.json({
-      data: 'successfully created index and loaded data into pinecone'
-    });
+  } catch (err) {
+    console.log('error: ', err);
   }
+
+  return NextResponse.json({
+    data: 'successfully created index and loaded data into pinecone'
+  });
+}
