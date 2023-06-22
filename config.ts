@@ -1,2 +1,2 @@
 export const index = 'bob'
-export const timeout = 80000
+export const timeout = 180000
