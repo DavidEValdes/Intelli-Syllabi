@@ -38,6 +38,8 @@ export const updatePinecone = async (client, indexName, docs) =>
     const index = client.Index(indexName);
     console.log(`found pinecone index: ${indexName}`);
 
+    await index.delete1([], true);
+
     for(const doc of docs)
     {
         console.log(`processing: ${doc.metadata.source}`);
