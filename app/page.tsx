@@ -82,7 +82,7 @@ return (
       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file-upload">
         Upload a document
       </label>
-      <input id="file-upload" type="file" onChange={handleFileChange} />
+      <input id="file-upload" type="file" className='border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500' onChange={handleFileChange} /> {/* enhanced file input design */}
     </div>
     <div className="space-y-2">
       <h2 className="text-xl font-semibold">What would you like to see?</h2>
