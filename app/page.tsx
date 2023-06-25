@@ -273,7 +273,7 @@ return (
   <TextBoxPortal>
     <div style={{ 
       position: 'absolute', 
-      top: 'calc(120%)', 
+      top: 2000, 
       left: 0,
       right: 0,
       display: 'flex', 
@@ -292,7 +292,7 @@ return (
         onChange={handleInputChange} 
         placeholder="Add your text here..."
       />
-      <button style={{ marginTop: '10px', padding: '10px', fontSize: '16px' }} onClick={addText}>Add Text</button>
+      <button style={{ marginTop: '10px', padding: '10px', fontSize: '44px', color: 'white' }} onClick={addText}>Add Text</button>
     </div>
   </TextBoxPortal>
 )}
