@@ -246,7 +246,7 @@ return (
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-12.png"
         />
-        
+
         
         <div className="overlap-group">
           
@@ -285,7 +285,6 @@ return (
     }}
   />
 </label>
-
           
          <div className="frame-5" onClick={() => setIsHomeworkClicked(!isHomeworkClicked)}>
          <div className="text-wrapper-3">Homework Dates</div>
