@@ -128,16 +128,18 @@ async function getTextractJobResults(jobId: string) {
   } while (true);
 }
 
+interface CustomNextApiRequest extends NextApiRequest {
+  file: Express.Multer.File & { metadata: { source: string } };
+}
 
+const apiRoute = async (req: CustomNextApiRequest, res: NextApiResponse) => {
+  if (!req.file) {
+    console.error('No file received');
+    return res.status(400).json({ error: 'No file received' });
+  }
 
-const apiRoute = async (req: NextApiRequest, res: NextApiResponse) => {
-    if (!req.body) {
-      console.error('No file received');
-      return res.status(400).json({ error: 'No file received' });
-    }
-
-    const file = req.body;
-    await uploadToS3(file);
+  const file = req.file;
+  await uploadToS3(file);
   const vectorDimensions = 1536;
 
   const client = new PineconeClient();
@@ -152,8 +154,7 @@ const apiRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await createIndex(client, index, vectorDimensions);
 
-    for (const doc of file) {
-      const filePath = doc.metadata.source;
+      const filePath = file.metadata.source;
       if (!filePath) {
         console.error('File path is undefined');
         throw new Error('File path is undefined');
@@ -161,13 +162,17 @@ const apiRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       const s3Path = await uploadToS3(filePath);
       const jobId = await startTextractJob(bucketName, s3Path.toString() || ''); // Provide a default empty string value
       const textractResults = await getTextractJobResults(jobId || ''); // Provide a default empty string value
-
+      
+      
       // Combine the raw text and form data
-      doc.pageContent = textractResults.rawText + '\n\nForm Data:\n' + textractResults.formData;
+      const tempDoc = {
+        pageContent: textractResults.rawText + '\n\nForm Data:\n' + textractResults.formData,
+      };
+
 
       // Update Pinecone
-      await updatePinecone(client, index, [doc]);
-    }
+      await updatePinecone(client, index, tempDoc);
+    
   } catch (err) {
     console.log('error: ', err);
   }
