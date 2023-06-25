@@ -7,6 +7,8 @@ import React from "react";
 import { About } from "./icons/About";
 import { Line1 } from "./icons/Line1";
 import { Rectangle4 } from "./icons/Rectangle4";
+import { MaterialSymbolsCheck } from "./icons/MaterialSymbolsCheck";
+import { MaterialSymbols } from "./components/MaterialSymbols";
 import "./globals.css";
 
 
@@ -75,8 +77,18 @@ async function sendQuery()
 }
 
 return (
-       <div className="index">
+<div className="index">
       <div className="div">
+        <MaterialSymbols />
+        <MaterialSymbolsCheck
+          style={{
+            height: "24px",
+            left: "0",
+            position: "absolute",
+            top: "0",
+            width: "24px",
+          }}
+        />
         <div className="frame">
           <div className="navbar">
             <div className="text-wrapper">Intelli Syllabi</div>
@@ -91,7 +103,11 @@ return (
             width: "73px",
           }}
         />
-        <div className="text-wrapper-2">contact</div>
+        <img
+          className="contact"
+          alt="Contact"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/contact.png"
+        />
         <img
           className="list"
           alt="List"
@@ -102,47 +118,66 @@ return (
           alt="Your personalized"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/649760de33e84c01c9c19ed1/img/your-personalized-study-blueprint-in-a-click.png"
         />
-        <div className="overlap">
-          <p className="p">
-            Harnessing the power of AI, Intelli-syllabi transforms your complex syllabus into a personalized,
-            streamlined study guide
-          </p>
-          <div className="div-wrapper">
-            <div className="text-wrapper-3">Get Started</div>
-          </div>
+        <p className="p">
+          Harnessing the power of AI, Intelli-syllabi transforms your complex syllabus into a personalized, streamlined
+          study guide
+        </p>
+        <div className="div-wrapper">
+          <div className="text-wrapper-2">Get Started</div>
         </div>
         <img
           className="img"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/64979aad6a8025aba06a7fec/img/frame-4.png"
         />
-        <div className="h-1-wrapper">
-          <h1 className="h-1">Submit</h1>
-        </div>
-        <div className="frame-2">
-          <div className="text-wrapper-4">Upload File</div>
-        </div>
+        <img
+          className="frame-2"
+          alt="Frame"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-13.png"
+        />
         <img
           className="frame-3"
           alt="Frame"
-          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/649760de33e84c01c9c19ed1/img/frame-5.png"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-12.png"
         />
-        <div className="frame-4">
-          <div className="text-wrapper-5">Exam Dates</div>
-        </div>
-        <div className="frame-5">
-          <div className="text-wrapper-6">Grading Scale</div>
-        </div>
-        <div className="frame-6">
-          <div className="text-wrapper-7">+ Add your Own</div>
-        </div>
-        <div className="frame-7">
-          <div className="text-wrapper-8">Office Hours</div>
-        </div>
-        <div className="frame-8">
-          <div className="text-wrapper-9">Professor Contact</div>
-        </div>
         <div className="overlap-group">
+          <img
+            className="frame-4"
+            alt="Frame"
+            src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-5.png"
+          />
+          <div className="frame-5">
+            <div className="text-wrapper-3">Homework Dates</div>
+          </div>
+          <img
+            className="frame-6"
+            alt="Frame"
+            src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-5.png"
+          />
+          <div className="frame-7">
+            <div className="text-wrapper-4">Professor Contact</div>
+          </div>
+        </div>
+        <img
+          className="frame-8"
+          alt="Frame"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-16.png"
+        />
+        <div className="frame-9">
+          <div className="text-wrapper-5">Office Hours</div>
+        </div>
+        <div className="add-your-own-wrapper">
+          <h1 className="add-your-own">
+            <span className="span">+</span>
+            <span className="text-wrapper-6">&nbsp;&nbsp;Add Your Own</span>
+          </h1>
+        </div>
+        <img
+          className="frame-10"
+          alt="Frame"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-17.png"
+        />
+        <div className="overlap">
           <Rectangle4
             style={{
               height: "1071px",
@@ -152,8 +187,8 @@ return (
               width: "1084px",
             }}
           />
-          <div className="frame-9">
-            <div className="text-wrapper-10">ABOUT</div>
+          <div className="frame-11">
+            <div className="text-wrapper-7">ABOUT</div>
           </div>
           <div className="rectangle" />
           <p className="intelli-syllabi">
@@ -170,36 +205,37 @@ return (
             <br /> A streamlined study blueprint that saves both time and paper.
           </p>
         </div>
-        <div className="overlap-group-2">
+        <div className="overlap-2">
           <Rectangle4
             style={{
               height: "1218px",
               left: "0",
               position: "absolute",
-              top: "62px",
+              top: "48px",
               width: "1084px",
             }}
           />
-          <div className="frame-10">
-            <div className="text-wrapper-11">CONTACT</div>
+          <div className="frame-12">
+            <div className="text-wrapper-8">CONTACT</div>
           </div>
           <div className="rectangle-2" />
-          <div className="text-wrapper-12">Email Address</div>
+          <div className="text-wrapper-9">Email Address</div>
           <Line1
             style={{
               height: "1px",
               left: "122px",
               objectFit: "cover",
               position: "absolute",
-              top: "379px",
+              top: "366px",
               width: "681px",
             }}
           />
           <div className="rectangle-3" />
-          <div className="text-wrapper-13">Message:</div>
+          <div className="text-wrapper-10">Message:</div>
           <div className="rectangle-4" />
-          <div className="text-wrapper-14">Send</div>
+          <div className="text-wrapper-11">Send</div>
         </div>
+        <div className="rectangle-5" />
       </div>
     </div>
 )

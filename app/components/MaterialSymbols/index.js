@@ -1,0 +1,1 @@
+export { MaterialSymbols } from "./MaterialSymbols";

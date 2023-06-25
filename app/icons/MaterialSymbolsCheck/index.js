@@ -1,0 +1,1 @@
+export { MaterialSymbolsCheck } from "./MaterialSymbolsCheck";
