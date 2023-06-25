@@ -221,6 +221,9 @@
   position: absolute;
   top: 1690px;
   width: 545px;
+  display: flex;
+  align-items: center;
+  z-index: 1;
 }
 
 .index .frame-9 {
@@ -468,3 +471,14 @@
   width: 3667px;
 }
 
+.index .image-container {
+  position: relative;
+}
+
+.index .checkmark-container {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+
+}

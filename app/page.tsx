@@ -14,6 +14,15 @@ import "./globals.css";
 
 export default function Home()
 {
+  const [isHomeworkClicked, setIsHomeworkClicked] = useState(false);
+  const [isExamsClicked, setIsExamsClicked] = useState(false);
+  const [isProfessorClicked, setIsProfessorClicked] = useState(false);
+  const [isOfficeClicked, setIsOfficeClicked] = useState(false);
+  const [isGradingClicked, setIsGradingClicked] = useState(false);
+
+  
+
+
   const [query, setQuery] = useState('')
   const [result,setResult] = useState('')
   const [loading, setLoading] = useState(false)
@@ -130,53 +139,99 @@ return (
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/64979aad6a8025aba06a7fec/img/frame-4.png"
         />
+
+          //Submit button
+
         <img
           className="frame-2"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-13.png"
         />
+
+          //upload file
+
         <img
           className="frame-3"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-12.png"
         />
+
+        
         <div className="overlap-group">
-          <img
-            className="frame-4"
-            alt="Frame"
-            src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-5.png"
-          />
-          <div className="frame-5">
-            <div className="text-wrapper-3">Homework Dates</div>
+          
+          
+
+
+          
+         <div className="frame-5" onClick={() => setIsHomeworkClicked(!isHomeworkClicked)}>
+         <div className="text-wrapper-3">Homework Dates</div>
+          {isHomeworkClicked && (
+           <div style={{ marginTop: '25px', marginLeft: '20px' }}>
+      
+           <MaterialSymbolsCheck style={{ width: '40px', height: '40px', color: 'green' }} />
+            </div>
+          )}
           </div>
-          <img
-            className="frame-6"
-            alt="Frame"
-            src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-5.png"
-          />
-          <div className="frame-7">
+          
+
+          <div className="frame-7" onClick={() => setIsProfessorClicked(!isProfessorClicked)}>
             <div className="text-wrapper-4">Professor Contact</div>
+            {isProfessorClicked && (
+           <div style={{ marginTop: '25px', marginLeft: '20px' }}>
+      
+           <MaterialSymbolsCheck style={{ width: '40px', height: '40px', color: 'green' }} />
+            </div>
+          )}
           </div>
         </div>
+
+        
+        <div className="frame-8" onClick={() => setIsExamsClicked(!isExamsClicked)}>
+        <div className="image-container">
         <img
-          className="frame-8"
-          alt="Frame"
-          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-16.png"
-        />
-        <div className="frame-9">
-          <div className="text-wrapper-5">Office Hours</div>
+           alt="FRAME"
+            src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-16.png"
+           />
+          {isExamsClicked && (
+           <div className="checkmark-container" style={{ marginRight: '10000px' }}>
+           <MaterialSymbolsCheck style={{ width: '40px', height: '40px', color: 'green' }} />
+           </div>
+          )}
         </div>
+      </div>
+
+
+        <div className="frame-9" onClick={() => setIsOfficeClicked(!isOfficeClicked)}>
+          <div className="text-wrapper-5">Office Hours</div>
+          {isOfficeClicked && (
+           <div style={{ marginTop: '25px', marginLeft: '20px' }}>
+           <MaterialSymbolsCheck style={{ width: '40px', height: '40px', color: 'green' }} />
+            </div>
+          )}
+        </div>
+
+        <div className="frame-10" onClick={() => setIsGradingClicked(!isGradingClicked)}>
+        <div className="image-container">
+        <img
+          alt="Frame"
+          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-17.png"
+          />
+        {isGradingClicked && (
+         <div className="checkmark-container">
+        <MaterialSymbolsCheck style={{ width: '40px', height: '40px', color: 'green' }} />
+        </div>
+       )}
+        </div>
+      </div>
+
+
         <div className="add-your-own-wrapper">
           <h1 className="add-your-own">
             <span className="span">+</span>
             <span className="text-wrapper-6">&nbsp;&nbsp;Add Your Own</span>
           </h1>
         </div>
-        <img
-          className="frame-10"
-          alt="Frame"
-          src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-17.png"
-        />
+        
         <div className="overlap">
           <Rectangle4
             style={{
