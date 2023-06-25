@@ -1,7 +1,8 @@
 'use client'
  
 import{
-  useState
+  useState,
+  useEffect,
 } from 'react'
 import React from "react";
 import { About } from "./icons/About";
@@ -10,6 +11,24 @@ import { Rectangle4 } from "./icons/Rectangle4";
 import { MaterialSymbolsCheck } from "./icons/MaterialSymbolsCheck";
 import { MaterialSymbols } from "./components/MaterialSymbols";
 import "./globals.css";
+import { hydrate } from 'react-dom';
+import ReactDOM from 'react-dom';
+
+
+
+function TextBoxPortal({ children }) {
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setPortalRoot(document.getElementById('textbox-portal'));
+  }, []); // Run only on the client-side, not during server-side rendering
+
+  if (!portalRoot) {
+    return null;
+  }
+
+  return ReactDOM.createPortal(children, portalRoot);
+}
 
 
 export default function Home()
@@ -20,7 +39,21 @@ export default function Home()
   const [isOfficeClicked, setIsOfficeClicked] = useState(false);
   const [isGradingClicked, setIsGradingClicked] = useState(false);
 
+  const [isTextButtonClicked, setIsTextButtonClicked] = useState(false);
+  const [texts, setTexts] = useState<string[]>([]);
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setQuery(inputValue);
+  }
+
+const addText = () => {
+  setTexts([...texts, query]);
+  setQuery('');
+}
   
+
+
 
 
   const [query, setQuery] = useState('')
@@ -225,13 +258,50 @@ return (
       </div>
 
 
-        <div className="add-your-own-wrapper">
-          <h1 className="add-your-own">
-            <span className="span">+</span>
-            <span className="text-wrapper-6">&nbsp;&nbsp;Add Your Own</span>
-          </h1>
-        </div>
-        
+      <body>
+  <div id="root"></div>
+  <div id="textbox-portal"></div>
+</body>
+
+      <div className="add-your-own-wrapper">
+  <h1 className="add-your-own" onClick={() => setIsTextButtonClicked(!isTextButtonClicked)}>
+    <span className="span">+</span>
+    <span className="text-wrapper-6">&nbsp;&nbsp;Add Your Own</span>
+  </h1>
+
+  {isTextButtonClicked && (
+  <TextBoxPortal>
+    <div style={{ 
+      position: 'absolute', 
+      top: 'calc(120%)', 
+      left: 0,
+      right: 0,
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      zIndex: 1, 
+    }}>
+      <textarea 
+        style={{ 
+          width: '80%', 
+          height: '100px',
+          padding: '10px', 
+          fontSize: '16px' 
+        }} 
+        value={query} 
+        onChange={handleInputChange} 
+        placeholder="Add your text here..."
+      />
+      <button style={{ marginTop: '10px', padding: '10px', fontSize: '16px' }} onClick={addText}>Add Text</button>
+    </div>
+  </TextBoxPortal>
+)}
+      </div>
+
+      {texts.map((text, index) => (
+      <p key={index} style={{ width: '80%', margin: '10px auto' }}>{text}</p>
+      ))}
+
         <div className="overlap">
           <Rectangle4
             style={{
