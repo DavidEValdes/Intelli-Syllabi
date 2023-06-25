@@ -13,6 +13,7 @@ import { MaterialSymbols } from "./components/MaterialSymbols";
 import "./globals.css";
 import { hydrate } from 'react-dom';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 
 
@@ -51,15 +52,11 @@ const addText = () => {
   setTexts([...texts, query]);
   setQuery('');
 }
-  
-
-
-
-
   const [query, setQuery] = useState('')
   const [result,setResult] = useState('')
   const [loading, setLoading] = useState(false)
   const [file, setFile] = useState(null)
+  const [selectedFile, setSelectedFile] = useState<File>();
   const [preferences, setPreferences] = useState({
     examDates: false,
     homeworkDates: false,
@@ -70,6 +67,25 @@ const addText = () => {
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
   }
+
+const handleUpload = async () =>
+{
+    setLoading(true);
+    console.log("test");
+    try
+    {
+        if(!selectedFile) return;
+        const formData = new FormData();
+        formData.append("myFile", selectedFile);
+        const{data} = await axios.post("/api/file",formData);
+        console.log(data);
+    }
+    catch(error:any)
+    {
+        console.log(error.response?.data);
+    }
+    setLoading(false);
+}
 
   const handleCheckboxChange = (e) => {
     setPreferences(prevState => ({
@@ -214,11 +230,49 @@ return (
               left: 0,
               width: '100%',
               height: '100%',
-              opacity: 0,
+              opacity: 1,
               cursor: 'pointer',
             }}
+            onChange={({target}) =>{
+                if(target.files)
+                {
+                    const file = target.files[0];
+                    setSelectedFile(file);
+                }
+            }
+            }
           />
         </label>
+
+        <button 
+        onClick={handleUpload}
+        disabled={loading} 
+        style={{opacity:loading ? ".5" : "1"}}
+        className='bg-red-600 p-3 w-r2 text-center rounded text-white'
+        >
+        {loading ? "uploading.." : "upload"}
+        </button>
+        <input
+            id="real file"
+            type="file"
+            style={{
+              position: 'absolute',
+              top: 700,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 1,
+              cursor: 'pointer',
+            }}
+            onChange={({ target }) => {
+            if (target.files) {
+              const file = target.files[0];
+              setSelectedFile(file);
+            }
+          }}
+          />
+
+
 
           
          <div className="frame-5" onClick={() => setIsHomeworkClicked(!isHomeworkClicked)}>
