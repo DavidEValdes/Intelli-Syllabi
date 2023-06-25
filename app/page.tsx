@@ -188,12 +188,37 @@ return (
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-12.png"
         />
-
+        
         
         <div className="overlap-group">
           
           
-
+                <label
+          className="block text-gray-700 text-lg font-bold mb-2"
+          htmlFor="file-upload"
+          style={{
+            position: 'absolute',
+            top: '770px',
+            left: '470px', 
+            fontSize: '20px', 
+            zIndex: 1, 
+          }}
+        >
+          
+          <input
+            id="file-upload"
+            type="file"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'pointer',
+            }}
+          />
+        </label>
 
           
          <div className="frame-5" onClick={() => setIsHomeworkClicked(!isHomeworkClicked)}>
