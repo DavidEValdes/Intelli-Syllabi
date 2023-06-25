@@ -13,7 +13,6 @@ import { MaterialSymbols } from "./components/MaterialSymbols";
 import "./globals.css";
 import { hydrate } from 'react-dom';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 
 
 
@@ -42,8 +41,6 @@ export default function Home()
 
   const [isTextButtonClicked, setIsTextButtonClicked] = useState(false);
   const [texts, setTexts] = useState<string[]>([]);
-  
-  const [otherState, setOtherState] = useState<File | null>(null);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -71,10 +68,8 @@ const addText = () => {
   })
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setOtherState(selectedFile);
-  };
+    setFile(e.target.files[0])
+  }
 
   const handleCheckboxChange = (e) => {
     setPreferences(prevState => ({
@@ -122,57 +117,6 @@ async function sendQuery()
         setLoading(false) 
     }
 }
-
-
-const submitFile = async () => {
-  if (!file) {
-    console.error('No file to upload');
-    
-    return;
-  }
-
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    await axios.post('https://syllabus-bucket.s3.us-east-2.amazonaws.com', formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-});
-
-    // File uploaded successfully, perform any additional actions here
-
-  } catch (error) {
-    console.error('Error uploading file', error);
-    // Handle error condition here
-  }
-};
-
-
-const handleFileUpload = async (file) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    await axios.post('http://your-upload-api-endpoint', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    // File uploaded successfully, perform any additional actions here
-
-  } catch (error) {
-    console.error('Error uploading file', error);
-    // Handle error condition here
-  }
-};
-
-
-
-
-
 
 return (
 <div className="index">
@@ -231,59 +175,51 @@ return (
 
           //Submit button
 
-          <img
+        <img
           className="frame-2"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-13.png"
-          onClick={createIndexAndEmbeddings}
-          
         />
 
-          //upload photo not button
+          //upload file
 
         <img
           className="frame-3"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-12.png"
         />
-
+        
         
         <div className="overlap-group">
           
-        <label
-  className="block text-gray-700 text-lg font-bold mb-2"
-  htmlFor="file-upload"
-  style={{
-    position: 'absolute',
-    top: '770px',
-    left: '470px',
-    fontSize: '20px',
-    zIndex: 1,
-  }}
->
-  <input
-    id="file-upload"
-    type="file"
-    style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      opacity: 0,
-      cursor: 'pointer',
-    }}
-    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files ? e.target.files[0] : null;
-      setOtherState(file); // Set the selected file to the state
+          
+                <label
+          className="block text-gray-700 text-lg font-bold mb-2"
+          htmlFor="file-upload"
+          style={{
+            position: 'absolute',
+            top: '770px',
+            left: '470px', 
+            fontSize: '20px', 
+            zIndex: 1, 
+          }}
+        >
+          
+          <input
+            id="file-upload"
+            type="file"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: 0,
+              cursor: 'pointer',
+            }}
+          />
+        </label>
 
-      // Trigger the submitFile function when the file is selected
-      if (file) {
-        submitFile();
-      }
-    }}
-  />
-</label>
           
          <div className="frame-5" onClick={() => setIsHomeworkClicked(!isHomeworkClicked)}>
          <div className="text-wrapper-3">Homework Dates</div>
