@@ -41,6 +41,8 @@ export default function Home()
 
   const [isTextButtonClicked, setIsTextButtonClicked] = useState(false);
   const [texts, setTexts] = useState<string[]>([]);
+  
+  const [otherState, setOtherState] = useState<File | null>(null);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -118,6 +120,38 @@ async function sendQuery()
     }
 }
 
+
+const submitFile = async () => {
+  if (!file) {
+      console.error('No file to upload');
+      alert('Please select a file to upload.');
+      return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+      const result = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+      });
+
+      const json = await result.json();
+      console.log('File upload result:', json);
+  } catch (err) {
+      console.error('File upload error:', err);
+  }
+}
+
+
+
+
+
+
+
+
+
 return (
 <div className="index">
       <div className="div">
@@ -175,13 +209,14 @@ return (
 
           //Submit button
 
-        <img
+          <img
           className="frame-2"
           alt="Frame"
           src="https://anima-uploads.s3.amazonaws.com/projects/64975e87a1b0005e5700e7c4/releases/6497a70ee47f25472fae2123/img/frame-13.png"
+          onClick={submitFile}
         />
 
-          //upload file
+          //upload photo not button
 
         <img
           className="frame-3"
@@ -216,6 +251,9 @@ return (
               height: '100%',
               opacity: 0,
               cursor: 'pointer',
+            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setOtherState(e.target.files ? e.target.files[0] : null);
             }}
           />
         </label>
